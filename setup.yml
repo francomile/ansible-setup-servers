@@ -1,0 +1,7 @@
+---
+- name: Role for setting up Debian Servers
+  hosts: all
+  remote_user: root
+  become: true
+  roles:
+      - setup

@@ -1,0 +1,37 @@
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+# ~/.bashrc: executed by bash(1) for non-login shells.
+
+# Note: PS1 and umask are already set in /etc/profile. You should not
+# need this unless you want different defaults for root.
+# PS1='${debian_chroot:+($debian_chroot)}\h:\w\$ '
+# umask 022
+
+# You may uncomment the following lines if you want `ls' to be colorized:
+export LS_OPTIONS='--color=auto'
+export GREP_OPTIONS='--color=auto'
+export LSCOLORS=ExFxBxDxCxegedabagacad
+
+eval "`dircolors`"
+alias ls='ls $LS_OPTIONS'
+alias la='ls $LS_OPTIONS -lAh'      # List files in human readable format with color and without directories
+alias ld='ls $LS_OPTIONS -hog'      # The ls Hog - easy to remember directory listing
+alias lx='ls $LS_OPTIONS -lXB'      #  Sort by extension.
+alias lk='ls $LS_OPTIONS -lSr'      #  Sort by size, biggest last.
+alias lt='ls $LS_OPTIONS -ltr'      #  Sort by date, most recent last.
+alias lc='ls $LS_OPTIONS -ltc'      #  Sort by/show change time,most recent first.
+alias lu='ls $LS_OPTIONS -ltu'      #  Sort by/show access time,most recent first.
+alias ll='ls $LS_OPTIONS -l'
+alias l='ls $LS_OPTIONS -lA'
+
+# Some more alias to avoid making mistakes:
+# alias rm='rm -i'
+# alias cp='cp -i'
+# alias mv='mv -i'
+
+# More aliases:
+#===============
+alias cd..='cd ..'
+alias pubip='curl http://169.254.169.254/latest/meta-data/public-ipv4; echo ""' # Get aws instance public IP
+
+# Set LC_ALL var
+export LC_ALL="en_US.UTF-8"

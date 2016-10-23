@@ -1,0 +1,78 @@
+---
+# This tasks will make the basic setup for Debian(7,8) servers:
+# 1 - Add Debian backports.
+# 2 - Update and upgrade all packages.
+# 3 - Install several usefull packages.
+# 4 - Set Locale (en_US.UTF-8).
+# 5 - Set vim as default editor and enable vim syntax highlighting.
+# 6 - copy /etc/bash.bashrc and root's .bashrc into place with some modifications and aliases.
+
+- name: Enable Backports for wheezy
+  lineinfile: dest=/etc/apt/sources.list line='deb http://http.debian.net/debian wheezy-backports main' state=present
+  when: (ansible_distribution == "Debian" and ansible_distribution_major_version == "7")
+
+- name: Enable Backports for Jessie
+  lineinfile: dest=/etc/apt/sources.list line='deb http://httpredir.debian.org/debian jessie-backports main' state=present
+  when: (ansible_distribution == "Debian" and ansible_distribution_major_version == "8")
+
+- name: Upgrade packages
+  apt: upgrade=dist update_cache=yes
+
+- name: Install base packages for Jessie
+  apt: pkg=dbus state=installed update_cache=yes
+  when: (ansible_distribution == "Debian" and ansible_distribution_major_version == "8")
+
+- name: Install base packages for wheezy
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+       - tree
+       - sysv-rc-conf
+       - rcconf
+       - curl
+       - wget
+       - python-software-properties
+       - vim
+       - at
+       - pxz
+       - s3cmd
+       - pigz
+       - dnsutils
+       - build-essential
+       - links
+       - xfsprogs
+       - lvm2
+       - screen
+       - less
+       - ccrypt
+       - unzip
+       - git
+       - telnet
+       - sysstat
+       - tcpdump
+       - socat
+       - bash-completion
+       - git-extras
+
+- name: Generate locale
+  locale_gen: name=en_US.UTF-8 state=present
+
+- name: Set LC_ALL
+  blockinfile:
+    dest: /etc/profile
+    insertafter: EOF
+    content: |
+      export LC_ALL="en_US.UTF-8"
+
+- name: Set vim as default editor
+  alternatives: name=editor path=/usr/bin/vim.basic
+
+- name: Enable vim syntax highlighting
+  lineinfile: dest=/etc/vim/vimrc regexp='^\"syntax on' line='syntax on'
+
+- name: Copy default bash.bashrc file into place
+  copy: src=bash.bashrc dest=/etc/bash.bashrc owner=root group=root mode=644 backup=yes
+
+- name: Copy root user .bashrc template
+  copy: src=bashrc_root dest=/root/.bashrc owner=root group=root mode=644 backup=no
+
+
